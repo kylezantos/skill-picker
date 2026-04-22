@@ -2,9 +2,11 @@
 
 Deliberate cross-skill reasoning for Claude Code — picks the right skill from your library when auto-selection isn't good enough.
 
-## The problem
+## Context
 
-Once you have more than ~10 skills installed, Claude's default auto-selection gets noisy. Multiple skills with overlapping descriptions start competing for the same trigger keywords. The obvious picks are often subtly wrong — while a better-targeted skill lives just outside the shortlist.
+Once you have more than ~10 skills installed, Claude's default auto-selection gets noisy. Multiple skills with overlapping descriptions start competing for the same trigger keywords, and the obvious picks are often subtly wrong while a better-targeted skill lives just outside the shortlist.
+
+`skill-picker` is for those moments — when you want a deliberate, rigorous pick instead of a probabilistic one.
 
 ## What it does
 
@@ -16,14 +18,6 @@ Given a task description, `skill-picker` will:
 4. **Offer a handoff** — invoke the primary skill now, generate a plan first, or stop at the recommendation
 
 The key move is the deep-read step. Descriptions are hypotheses; `SKILL.md` bodies are what the skill actually does. `skill-picker` forces you (or Claude) to look past the hypothesis before committing.
-
-## Install
-
-```bash
-npx skills add kylezantos/skill-picker
-```
-
-Or manually: copy the `skill-picker/` directory into `~/.claude/skills/`.
 
 ## Usage
 
@@ -103,7 +97,15 @@ See [SKILL.md](SKILL.md) for the full list.
 
 ## Requirements
 
-- **Claude Code** — the `AskUserQuestion` tool powers the handoff gate. Other agents can still use the skill, but the handoff fall back to text-only prompts.
+- **Claude Code** — the `AskUserQuestion` tool powers the handoff gate. Other agents can still use the skill, but the handoff falls back to text-only prompts.
+
+## Install
+
+```bash
+npx skills add kylezantos/skill-picker
+```
+
+Or manually: copy the `skill-picker/` directory into `~/.claude/skills/`.
 
 ## License
 
