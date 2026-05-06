@@ -54,9 +54,9 @@ Also identify **2-3 "obvious but probably wrong"** candidates — skills that lo
 
 For each of the 3-5 shortlisted candidates, locate and read its SKILL.md. Try paths in this order:
 
-1. **User-level:** `~/.claude/skills/<name>/SKILL.md`
-2. **Project-level:** `./.claude/skills/<name>/SKILL.md` (relative to current working directory)
-3. **Plugin-provided** (names with colon like `compound-engineering:ce-work`): Glob for `~/.claude/**/skills/<skill-part>/SKILL.md` or `~/.claude/plugins/**/skills/<skill-part>/SKILL.md` — the part after the colon is the skill name.
+1. **User-level:** `~/.codex/skills/<name>/SKILL.md`, `~/.claude/skills/<name>/SKILL.md`, then `~/.agents/skills/<name>/SKILL.md`
+2. **Project-level:** `./.codex/skills/<name>/SKILL.md`, `./.claude/skills/<name>/SKILL.md`, then `./.agents/skills/<name>/SKILL.md` relative to the current working directory
+3. **Plugin-provided** (names with colon like `compound-engineering:ce-work`): Glob for `~/.codex/plugins/**/skills/<skill-part>/SKILL.md`, `~/.claude/plugins/**/skills/<skill-part>/SKILL.md`, or broader `~/.codex/**/skills/<skill-part>/SKILL.md` / `~/.claude/**/skills/<skill-part>/SKILL.md` matches — the part after the colon is the skill name.
 
 If you cannot locate a skill's file, note it in the output (don't fabricate its contents).
 
@@ -160,7 +160,7 @@ Once you've landed on a direction, `tactical-skill` is the right tool for [speci
 Want to proceed?
 ```
 
-The evidence quotes are non-negotiable. They are the audit trail proving you actually opened each skill's file. Without them, the recommendation is unverifiable — it might as well be default Claude guessing.
+The evidence quotes are non-negotiable. They are the audit trail proving you actually opened each skill's file. Without them, the recommendation is unverifiable — it might as well be default model guessing.
 
 After this output, trigger the handoff gate (Step 5).
 
@@ -221,7 +221,7 @@ Stop. The user will invoke manually.
 
 Common failure points — where this skill gets it wrong:
 
-- **Don't skip the deep-verify step on finalists.** The whole value of the skill is catching description-vs-reality mismatches. A shallow-only pass is what Claude does by default — adding a skill that just does the shallow pass again is worthless.
+- **Don't skip the deep-verify step on finalists.** The whole value of the skill is catching description-vs-reality mismatches. A shallow-only pass is what the model does by default — adding a skill that just does the shallow pass again is worthless.
 
 - **Don't recommend skills that aren't in the user's available-skills list.** Training data includes skill names from docs and public repos. If the skill isn't in the current context reminder, it isn't installed. Don't hallucinate.
 
@@ -231,7 +231,7 @@ Common failure points — where this skill gets it wrong:
 
 - **Don't auto-chain without the handoff gate.** The structured output is a recommendation, not an instruction. Always go through the handoff question before invoking anything. Exception: if the user's original prompt explicitly said "pick the right skill and run it" — then you have pre-authorization and can skip the gate.
 
-- **Don't treat plugin-prefixed skills as user-level.** A name like `compound-engineering:ce-work` means the file lives in a plugin directory, not `~/.claude/skills/`. Use Glob to find it — don't assume a path.
+- **Don't treat plugin-prefixed skills as user-level.** A name like `compound-engineering:ce-work` means the file lives in a plugin directory, not directly under a user-level `skills/` folder. Use Glob to find it — don't assume a path.
 
 - **Don't recommend more than 3 skills as "better matches."** If you're returning 5+ options, you haven't actually picked — you've passed the buck back to the user. Pick.
 
@@ -249,8 +249,8 @@ Common failure points — where this skill gets it wrong:
 
 This skill should consider skills from all three locations:
 
-1. **User-level skills** — `~/.claude/skills/*/SKILL.md`
-2. **Project-level skills** — `./.claude/skills/*/SKILL.md` (when a current project has them)
+1. **User-level skills** — `~/.codex/skills/*/SKILL.md`, `~/.claude/skills/*/SKILL.md`, and `~/.agents/skills/*/SKILL.md`
+2. **Project-level skills** — `./.codex/skills/*/SKILL.md`, `./.claude/skills/*/SKILL.md`, and `./.agents/skills/*/SKILL.md` when a current project has them
 3. **Plugin-provided skills** — Appear in the available-skills list with colon-prefixed names (`plugin:skill-name`). Located via Glob in plugin directories.
 
 The available-skills list in the current context is the authoritative source of "what's installed right now." Start from that list. Do not attempt to recommend from memory of past installations.
